@@ -1,4 +1,6 @@
 import os
+from ipaddress import ip_network
+from ipify import get_ip
 from troposphere import (
   Base64,
   ec2,
@@ -9,7 +11,7 @@ from troposphere import (
   Ref,
   Template,
 )
-
+PublicCidr = str(ip_network(get_ip()))
 port = "3000"
 
 t = Template()
@@ -17,9 +19,9 @@ t = Template()
 t.set_description("DevOps in AWS - HelloWorld application")
 
 t.add_parameter(Parameter("KeyPair",
-    Description=os.getenv('KEY'),
+    Description="herculano_devops",
     Type="AWS::EC2::KeyPair::KeyName",
-    ConstraintDescription=os.getenv('KEY'),
+    ConstraintDescription="herculano_devops",
 ))
 
 t.add_resource(ec2.SecurityGroup(
@@ -30,7 +32,7 @@ t.add_resource(ec2.SecurityGroup(
             IpProtocol="tcp",
             FromPort="22",
             ToPort="22",
-            CidrIp=os.getenv('MY_IP'),
+            CidrIp=PublicCidr
             ),
         ec2.SecurityGroupRule(
             IpProtocol="tcp",
@@ -44,7 +46,7 @@ t.add_resource(ec2.SecurityGroup(
 
 ud = Base64(Join('\n', [
     "#!/bin/bash",
-    "yum install --enablerepo-epel -y nodejs",
+    "yum install --enablerepo=epel -y nodejs",
     "wget http://bit.ly/2vESNuc -O /home/ec2-user/helloworld.js",
     "wget http://bit.ly/2vVvT18 -O /etc/init/helloworld.conf",
     "start helloworld"
