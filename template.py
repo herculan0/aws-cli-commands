@@ -14,7 +14,7 @@ port = "3000"
 
 t = Template()
 
-t.add_description("DevOps in AWS - HelloWorld application")
+t.set_description("DevOps in AWS - HelloWorld application")
 
 t.add_parameter(Parameter("KeyPair",
     Description=os.getenv('KEY'),
@@ -34,7 +34,7 @@ t.add_resource(ec2.SecurityGroup(
             ),
         ec2.SecurityGroupRule(
             IpProtocol="tcp",
-            Fromport=port,
+            FromPort=port,
             ToPort=port,
             CidrIp="0.0.0.0/0"
             ),
@@ -63,14 +63,14 @@ t.add_resource(ec2.Instance(
 t.add_output(Output(
     "Instance",
     Description="Public Ip of our instance.",
-    Value=GetAtt(instance, "PublicIp"),
+    Value=GetAtt("instance", "PublicIp"),
 ))
 
 t.add_output(Output(
     "WebUrl",
     Description="Application endpoint",
     Value=Join("", [
-        "http://", GetAtt(instance, "PublicDnsName"),
+        "http://", GetAtt("instance", "PublicDnsName"),
         ":", port]),
 ))
 
