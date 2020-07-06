@@ -1,3 +1,5 @@
 venv
 .envrc
 helloworld-cf.template
+jenkins-cf.template
+./ansiblebase.template
