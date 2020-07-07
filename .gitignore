@@ -3,3 +3,4 @@ venv
 helloworld-cf.template
 jenkins-cf.template
 ./ansiblebase.template
+nodeserver-cf.template
